@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { nanoid } from 'nanoid'
+import shortid from 'shortid';
 
 import Container from './Container/Container';
 import ContactForm from './ContactForm/ContactForm';
+import ContactList from './ContactList/ContactList';
+import Filter from './Filter/Filter';
 
 class App extends Component{
   state = {
@@ -35,13 +37,25 @@ class App extends Component{
       return {
         contacts: [
           {
-            id: nanoid.generate(),
+            id: shortid.generate(),
             name,
             number,
           },
           ...contacts,
         ],
       };
+    });
+  };
+
+  filterContacts = name => {
+    return this.state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(name.toLowerCase())
+    );
+  };
+
+  deleteContact = id => {
+    this.setState({
+      contacts: this.state.contacts.filter(contact => contact.id !== id),
     });
   };
 
@@ -52,11 +66,11 @@ class App extends Component{
           <h1>Phonebook</h1>
           <ContactForm onSubmit={this.formSubmit} />
           <h2>Contacts</h2>
-          {/* <Filter onChange={this.handleChange} filter={this.state.filter} />
+          <Filter onChange={this.handleChange} filter={this.state.filter} />
           <ContactList
             filterContacts={this.filterContacts(this.state.filter)}
             onClickDelete={this.deleteContact}
-          /> */}
+          />
         </div>
       </Container>
     );
